@@ -9,6 +9,9 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var Random = require('meteor-random');
 
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
 /*
   ===========================================================================
             Setup express + passportjs server for authentication
@@ -73,17 +76,11 @@ app.get('/api/events', function (req, res) {
         timeMin: req.query.timeMin + '+07:00',
         timeMax: req.query.timeMax + '+07:00'
     };
-    //refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
-    // gcal(accessToken).events.list(calendarId, query, function (err, data) {
-    //     if (err) return res.send(500, err);
-    //     return res.json(data);
-    // });
-    //});
-
-    gcal(accessToken).events.list(calendarId, query)
-    .then(function(err, data) {
-        if (err) return res.send(500, err);
-        return res.json(data);
+    refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
+        gcal(accessToken).events.list(calendarId, query, function (err, data) {
+            if (err) return res.send(500, err);
+            return res.json(data);
+        });
     });
 });
 
