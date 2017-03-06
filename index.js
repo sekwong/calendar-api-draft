@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(session({ secret: 'keyboard cat' }));
+app.use(session({ secret: '777' }));
 app.use(passport.initialize());
 
 app.listen(8082);
@@ -63,6 +63,8 @@ app.get('/auth/callback',
   ===========================================================================
 */
 
+var accessToken = 'ya29.GlsGBJOQTner327ORAkExMXPoxK2GlIPhkE89T7YKBFvz6Q_VRZD3TDBM4ChWJ0Kpl1HZjaRpXeHetyMMwz3et7S7Ekbt3j-QUMb1Ws8qEPlZqI-on1yoheya82h';
+
 
 /** GET / - List all events */
 app.get('/api/events', function (req, res) {
@@ -70,12 +72,18 @@ app.get('/api/events', function (req, res) {
     var query = {
         timeMin: req.query.timeMin + '+07:00',
         timeMax: req.query.timeMax + '+07:00'
-    }
-    refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
-        gcal(accessToken).events.list(calendarId, query, function (err, data) {
-            if (err) return res.send(500, err);
-            return res.json(data);
-        });
+    };
+    //refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
+    // gcal(accessToken).events.list(calendarId, query, function (err, data) {
+    //     if (err) return res.send(500, err);
+    //     return res.json(data);
+    // });
+    //});
+
+    gcal(accessToken).events.list(calendarId, query)
+    .then(function(err, data) {
+        if (err) return res.send(500, err);
+        return res.json(data);
     });
 });
 
