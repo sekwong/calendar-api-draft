@@ -1,0 +1,140 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Calendar API",
+		"_postman_id": "1d50a2c0-5c32-8a7e-4da0-01e5e3a81d83",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Event",
+			"request": {
+				"url": "{{url}}/api/events/eventId",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "List Events",
+			"request": {
+				"url": "{{url}}/api/events?timeMin=2017-03-01T00:00:00&timeMax=2017-03-31T23:59:59",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Quick Add",
+			"request": {
+				"url": "{{url}}/api/events/quick-add",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "text",
+							"value": "super",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add Event",
+			"request": {
+				"url": "{{url}}/api/events",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "date",
+							"value": "2017-03-06",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "startTime",
+							"value": "09:00:00",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "endTime",
+							"value": "17:00:00",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "name",
+							"value": "eddie",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "tel",
+							"value": "9999999",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "email",
+							"value": "seksan@teamzoon.com",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "roomId",
+							"value": "STARTUP_CAFE",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "remark",
+							"value": "Test API",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Event",
+			"request": {
+				"url": "{{url}}/api/events/eventId",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

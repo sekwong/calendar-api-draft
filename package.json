@@ -7,5 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.0",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.1",
+    "express": "^4.15.0",
+    "express-session": "^1.15.1",
+    "meteor-random": "0.0.3",
+    "passport-oauth2-refresh": "^1.0.0",
+    "util": "^0.10.3"
+  }
 }
