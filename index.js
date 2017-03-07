@@ -9,9 +9,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var Random = require('meteor-random');
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-
+var _ = require('underscore');
 /*
   ===========================================================================
             Setup express + passportjs server for authentication
@@ -66,8 +64,15 @@ app.get('/auth/callback',
   ===========================================================================
 */
 
-var accessToken = 'ya29.GlsGBJOQTner327ORAkExMXPoxK2GlIPhkE89T7YKBFvz6Q_VRZD3TDBM4ChWJ0Kpl1HZjaRpXeHetyMMwz3et7S7Ekbt3j-QUMb1Ws8qEPlZqI-on1yoheya82h';
-
+var itemToBigCal = function(item) {
+    return {
+        id: item.id,
+        title: item.summary,
+        desc: item.description,
+        start: item.start.dateTime,
+        end: item.end.dateTime
+    };
+}
 
 /** GET / - List all events */
 app.get('/api/events', function (req, res) {
@@ -79,7 +84,11 @@ app.get('/api/events', function (req, res) {
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.list(calendarId, query, function (err, data) {
             if (err) return res.send(500, err);
-            return res.json(data);
+            if(data.items && data.items.length > 0) {
+                return res.json(_.map(data.items, function(item) {
+                    return itemToBigCal(item);
+                }));
+            }
         });
     });
 });
@@ -91,7 +100,7 @@ app.get('/api/events/:eventId', function (req, res) {
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.get(calendarId, eventId, function (err, data) {
             if (err) return res.send(500, err);
-            return res.json(data);
+            return res.json(itemToBigCal(data));
         });
     });
 });
@@ -103,7 +112,7 @@ app.post('/api/events/quick-add', function (req, res) {
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.quickAdd(calendarId, text, function (err, data) {
             if (err) return res.send(500, err);
-            return res.json(data);
+            return res.json(itemToBigCal(data));
         });
     });
 });
@@ -137,7 +146,7 @@ app.post('/api/events', function (req, res) {
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.insert(calendarId, event, function (err, data) {
             if (err) return res.send(500, err);
-            return res.json(data);
+            return res.json(itemToBigCal(data));
         });
     });
 });
