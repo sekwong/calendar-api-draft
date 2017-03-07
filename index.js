@@ -69,8 +69,8 @@ var itemToBigCal = function(item) {
         id: item.id,
         title: item.summary,
         desc: item.description,
-        start: item.start.dateTime,
-        end: item.end.dateTime
+        start: Math.floor(new Date(item.start.dateTime)),
+        end: Math.floor(new Date(item.end.dateTime)),
     };
 }
 
