@@ -28,6 +28,12 @@ app.use(bodyParser.json());
 
 app.use(session({ secret: '777' }));
 app.use(passport.initialize());
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 
 app.listen(8082);
 var strategy = new GoogleStrategy({
@@ -64,7 +70,7 @@ app.get('/auth/callback',
   ===========================================================================
 */
 
-var itemToBigCal = function(item) {
+var itemToBigCal = function (item) {
     return {
         id: item.id,
         title: item.summary,
@@ -84,8 +90,8 @@ app.get('/api/events', function (req, res) {
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.list(calendarId, query, function (err, data) {
             if (err) return res.send(500, err);
-            if(data.items && data.items.length > 0) {
-                return res.json(_.map(data.items, function(item) {
+            if (data.items && data.items.length > 0) {
+                return res.json(_.map(data.items, function (item) {
                     return itemToBigCal(item);
                 }));
             }
