@@ -83,10 +83,17 @@ var itemToBigCal = function (item) {
 /** GET / - List all events */
 app.get('/api/events', function (req, res) {
     var calendarId = config.calendar_id;
-    var query = {
-        timeMin: req.query.timeMin + '+07:00',
-        timeMax: req.query.timeMax + '+07:00'
-    };
+    var query = {};
+    if  (req.query.timeMin) {
+        query.timeMin = req.query.timeMin + '+07:00';
+    }
+    if  (req.query.timeMax) {
+        query.timeMax = req.query.timeMax + '+07:00';
+    }
+    if  (req.query.query) {
+        query.q = req.query.query;
+    }
+    
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.list(calendarId, query, function (err, data) {
             if (err) return res.send(500, err);
@@ -127,7 +134,8 @@ app.post('/api/events/quick-add', function (req, res) {
 app.post('/api/events', function (req, res) {
     var calendarId = config.calendar_id;
     var reference = Random.id(4).toUpperCase();
-    var summary = req.body.roomId + '#' + reference;
+    var roomId = req.body.roomId ? req.body.roomId: config.default_room_id;
+    var summary = roomId + '#' + reference;
     var description = 'Name: ' + req.body.name + '\n';
     description += 'Tel: ' + req.body.tel + '\n';
     description += 'E-mail: ' + req.body.email + '\n';
