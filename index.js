@@ -93,7 +93,6 @@ app.get('/api/events', function (req, res) {
     if  (req.query.query) {
         query.q = req.query.query;
     }
-    
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.list(calendarId, query, function (err, data) {
             if (err) return res.send(500, err);
@@ -101,6 +100,8 @@ app.get('/api/events', function (req, res) {
                 return res.json(_.map(data.items, function (item) {
                     return itemToBigCal(item);
                 }));
+            } else {
+                return res.json([]);
             }
         });
     });
