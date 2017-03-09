@@ -135,6 +135,45 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Send confirm email",
+			"request": {
+				"url": "{{url}}/api/email/confirm",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "html",
+							"value": "<div>Test HTML body</div>",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "to",
+							"value": "seksan@teamzoon.com",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "subject",
+							"value": "Start Up Cafe: Room reservation confirmed",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": "send email by mailgun"
+			},
+			"response": []
 		}
 	]
 }

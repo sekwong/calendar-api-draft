@@ -8,8 +8,9 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var Random = require('meteor-random');
-
 var _ = require('underscore');
+var mailgun = require('mailgun-js')({ apiKey: config.mail_gun_api_key, domain: config.mail_gun_domain });
+
 /*
   ===========================================================================
             Setup express + passportjs server for authentication
@@ -84,13 +85,13 @@ var itemToBigCal = function (item) {
 app.get('/api/events', function (req, res) {
     var calendarId = config.calendar_id;
     var query = {};
-    if  (req.query.timeMin) {
+    if (req.query.timeMin) {
         query.timeMin = req.query.timeMin + '+07:00';
     }
-    if  (req.query.timeMax) {
+    if (req.query.timeMax) {
         query.timeMax = req.query.timeMax + '+07:00';
     }
-    if  (req.query.query) {
+    if (req.query.query) {
         query.q = req.query.query;
     }
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
@@ -135,7 +136,7 @@ app.post('/api/events/quick-add', function (req, res) {
 app.post('/api/events', function (req, res) {
     var calendarId = config.calendar_id;
     var reference = Random.id(4).toUpperCase();
-    var roomId = req.body.roomId ? req.body.roomId: config.default_room_id;
+    var roomId = req.body.roomId ? req.body.roomId : config.default_room_id;
     var summary = roomId + '#' + reference;
     var description = 'Name: ' + req.body.name + '\n';
     description += 'Tel: ' + req.body.tel + '\n';
@@ -161,8 +162,30 @@ app.post('/api/events', function (req, res) {
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
         gcal(accessToken).events.insert(calendarId, event, function (err, data) {
             if (err) return res.send(500, err);
-            return res.json(itemToBigCal(data));
+            if (data) {
+
+                return res.json(itemToBigCal(data));
+            }
+
+
         });
+    });
+});
+
+app.post('/api/email/confirm', function (req, res) {
+    var html = req.body.html;
+    var subject = req.body.subject || "Room booking confirmed";
+    var to = req.body.to;
+    var data = {
+        from: config.email_sender,
+        to: to,
+        subject: subject,
+        html: html
+    };
+    
+    mailgun.messages().send(data, function (err, result) {
+        if (err) return res.send(500, err);
+        return res.json(result);
     });
 });
 
