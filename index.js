@@ -158,7 +158,7 @@ function sendConfirmMail(req, reference, callback) {
 /** POST / - Create a new entity */
 app.post('/api/events', function (req, res) {
     var calendarId = config.calendar_id;
-    var reference = Random.id(4).toUpperCase();
+    var reference = req.body.reference || Random.id(4).toUpperCase();
     var roomId = req.body.roomId ? req.body.roomId : config.default_room_id;
     var summary = roomId + '#' + reference;
     var description = 'Name: ' + req.body.name + '\n';
@@ -166,6 +166,9 @@ app.post('/api/events', function (req, res) {
     description += 'E-mail: ' + req.body.email + '\n';
     if (req.body.remark) {
         description += 'Remark: ' + req.body.remark + '\n';
+    }
+    if (req.body.company) {
+        description += 'Company: ' + req.body.company + '\n';
     }
     var startAt = req.body.date + 'T' + req.body.startTime;
     var endAt = req.body.date + 'T' + req.body.endTime;

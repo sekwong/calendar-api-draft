@@ -73,7 +73,7 @@
 					"urlencoded": [
 						{
 							"key": "date",
-							"value": "2017-03-06",
+							"value": "2017-12-06",
 							"type": "text",
 							"enabled": true
 						},
@@ -109,13 +109,25 @@
 						},
 						{
 							"key": "roomId",
-							"value": "STARTUP_CAFE",
+							"value": "SC01",
 							"type": "text",
 							"enabled": true
 						},
 						{
 							"key": "remark",
-							"value": "Test API",
+							"value": "Test API Mail",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "company",
+							"value": "TeamZoon",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "reference",
+							"value": "RAND_ME",
 							"type": "text",
 							"enabled": true
 						}
