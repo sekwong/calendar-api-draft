@@ -132,6 +132,29 @@ app.post('/api/events/quick-add', function (req, res) {
     });
 });
 
+function sendConfirmMail(req, reference, callback) {
+    var subject = "Room booking confirmed";
+    var to = req.body.email;
+    var from = config.email_sender;
+    var html = '';
+    html += 'Booking Reference: <b>' + reference + '</b><br />';
+    html += 'Date: ' + req.body.date + '<br />';
+    html += 'Start: ' + req.body.startTime + '<br />';
+    html += 'End: ' + req.body.endTime + '<br />';
+    var data = {
+        from: from,
+        to: to,
+        subject: subject,
+        html: html
+    };
+    mailgun.messages().send(data, function (mailErr, mailRes) {
+        if (mailErr) console.log(mailErr);
+        if (callback) {
+            callback(mailErr, mailRes);
+        }
+    });
+}
+
 /** POST / - Create a new entity */
 app.post('/api/events', function (req, res) {
     var calendarId = config.calendar_id;
@@ -160,32 +183,14 @@ app.post('/api/events', function (req, res) {
         }
     };
     refresh.requestNewAccessToken('google', config.refresh_token, function (err, accessToken, refreshToken) {
-        gcal(accessToken).events.insert(calendarId, event, function (err, data) {
+        gcal(accessToken).events.insert(calendarId, event, function (err, gResult) {
+            console.log(err);
             if (err) return res.send(500, err);
-            if (data) {
-
-                return res.json(itemToBigCal(data));
+            if (gResult) {
+                sendConfirmMail(req, reference);
+                return res.json(itemToBigCal(gResult));
             }
-
-
         });
-    });
-});
-
-app.post('/api/email/confirm', function (req, res) {
-    var html = req.body.html;
-    var subject = req.body.subject || "Room booking confirmed";
-    var to = req.body.to;
-    var data = {
-        from: config.email_sender,
-        to: to,
-        subject: subject,
-        html: html
-    };
-    
-    mailgun.messages().send(data, function (err, result) {
-        if (err) return res.send(500, err);
-        return res.json(result);
     });
 });
 
