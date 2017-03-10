@@ -8,5 +8,6 @@ module.exports = {
     email_sender: 'Start UP CAFE <seksan@teamzoon.com>',
     timezone: 'Asia/Bangkok',
     default_room_id: 'SC01',
-    
+    gmail_user: process.env.GMAIL_USER,
+    gmail_password: process.env.GMAIL_PASSWORD
 }
