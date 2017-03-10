@@ -154,7 +154,7 @@ app.post('/api/events/quick-add', function (req, res) {
 function sendConfirmMail(req, reference, accessToken, callback) {
   var subject = "Room booking confirmed";
   var to = req.body.email;
-  var from = config.email_sender;
+  var from = 'Start Up Cafe <' + config.gmail_user + '>';
   var html = '';
   html += 'Booking Reference: <b>' + reference + '</b><br />';
   html += 'Date: ' + req.body.date + '<br />';
